@@ -6,6 +6,7 @@
   "scripts": {
     "build": "babel ./src --out-dir dist --extensions \".ts,.tsx,.js,.jsx\"",
     "start": "npm run build && nodemon dist/index.js",
+    "tsc":   "tsc --isolatedModules false",
     "lint": "tslint -c tslint.json --fix --format verbose  src/**/*.{ts,tsx}"
   },
   "dependencies": {
