@@ -6,10 +6,11 @@
   "scripts": {
     "build": "babel ./src --out-dir dist --extensions \".ts,.tsx,.js,.jsx\"",
     "start": "npm run build && nodemon dist/index.js",
-    "tsc":   "tsc --isolatedModules false",
+    "tsc": "tsc --isolatedModules false",
     "lint": "tslint -c tslint.json --fix --format verbose  src/**/*.{ts,tsx}"
   },
   "dependencies": {
+    "@babel/runtime": "^7.1.5",
     "express": "^4.16.4"
   },
   "devDependencies": {
@@ -17,6 +18,7 @@
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-typescript": "^7.1.0",
     "@types/express": "^4.16.0",
