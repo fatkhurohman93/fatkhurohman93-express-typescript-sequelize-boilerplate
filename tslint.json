@@ -2,9 +2,7 @@
   "extends": ["tslint:recommended", "tslint-react","tslint-config-prettier"],
   "linterOptions": {
     "exclude": [
-      "config/**/*.js",
-      "node_modules/**/*.ts",
-      "coverage/lcov-report/*.js"
+      "node_modules/**/*.ts"
     ]
   },
   "rules": {
@@ -15,6 +13,7 @@
     "jsx-no-lambda": false,
     "no-console": false,
     "no-var-requires":false,
-    "max-classes-per-file":false
+    "max-classes-per-file":false,
+    "variable-name":false
   }
 }
