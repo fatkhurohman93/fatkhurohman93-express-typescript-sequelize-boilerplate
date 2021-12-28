@@ -1,9 +1,16 @@
 import express from 'express';
-const app = express();
-const port = 4000;
+import logger from './loaders/logger';
+import loaders from './loaders';
 
-app.get('/', (_req, res) => res.send('Hello World!'));
+const startServer = async () => {
+  const app = express();
+  const port = 4000;
 
-app.listen({ port: 4000 }, () =>
-  console.log(`🚀 Server ready at http://localhost:${port}`)
-);
+  await loaders(app);
+
+  app.listen({ port: 4000 }, () =>
+    logger.info(`🚀 Server listening at http://localhost:${port}`)
+  );
+};
+
+startServer();

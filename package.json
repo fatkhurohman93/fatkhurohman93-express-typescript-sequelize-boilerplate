@@ -1,8 +1,8 @@
 {
-  "name": "node-express-ts-babel",
+  "name": "express-typescript-sequelize-boilerplate",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT",
+  "license": "akbarpathur",
   "scripts": {
     "start": "rimraf dist && yarn start:build_nodemon",
     "start:build_nodemon": "concurrently --names \"build,nodemon\" \"yarn build --watch\" \"yarn nodemon\"",
@@ -13,7 +13,16 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
-    "express": "^4.16.4"
+    "@types/sequelize": "^4.28.11",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.1",
+    "node-rsa": "^1.1.1",
+    "sequelize": "^7.0.0-alpha.2",
+    "sqlite3": "^5.0.2",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
@@ -23,7 +32,10 @@
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-typescript": "^7.1.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.16.0",
+    "@types/jsonwebtoken": "^8.5.6",
     "@types/node": "^10.12.2",
     "concurrently": "^4.0.1",
     "nodemon": "^1.18.6",
