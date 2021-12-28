@@ -1,5 +1,5 @@
-# node-express-ts-babel
+# express-typescript-sequelize-boilerplate
 Minimal node express typescript babel 7 boilerplate
 
-For more info: 
-https://blogs.msdn.microsoft.com/typescript/2018/08/27/typescript-and-babel-7/
+
+Facebook: https://www.facebook.com/akbar.kerens.18
