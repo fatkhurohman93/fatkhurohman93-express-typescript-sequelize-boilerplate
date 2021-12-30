@@ -6,6 +6,52 @@
   "plugins": [
       "@babel/plugin-transform-runtime",
       "@babel/proposal-class-properties",
-      "@babel/proposal-object-rest-spread"
+      "@babel/proposal-object-rest-spread",
+      ["babel-plugin-root-import",
+        {
+          "paths": [
+            {
+              "rootPathSuffix": "./src/utils",
+              "rootPathPrefix": "@utils"
+            },
+            {
+              "rootPathSuffix": "./src/services",
+              "rootPathPrefix": "@services"
+            },
+            {
+              "rootPathSuffix": "./src/loaders",
+              "rootPathPrefix": "@loaders"
+            },
+            {
+              "rootPathSuffix": "./src/interfaces",
+              "rootPathPrefix": "@interfaces"
+            },
+            {
+              "rootPathSuffix": "./src/configs",
+              "rootPathPrefix": "@configs"
+            },
+            {
+              "rootPathSuffix": "./src/models",
+              "rootPathPrefix": "@models"
+            },
+            {
+              "rootPathSuffix": "./src/api",
+              "rootPathPrefix": "@api"
+            },
+            {
+              "rootPathSuffix": "./src/api/controllers",
+              "rootPathPrefix": "@controllers"
+            },
+            {
+              "rootPathSuffix": "./src/api/middlewares",
+              "rootPathPrefix": "@middlewares"
+            },
+            {
+              "rootPathSuffix": "./src/api/routers",
+              "rootPathPrefix": "@routers"
+            }
+          
+          ]
+        }]
   ]
 }
