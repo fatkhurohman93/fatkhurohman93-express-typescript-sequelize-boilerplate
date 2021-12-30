@@ -10,7 +10,7 @@ dotenv.config();
 
 
 export default ({ app }: { app: Application }) => {
-    app.use('/', express.static(path.join(__dirname, '../../public')));
+  app.use('/', express.static(path.join(__dirname, '../../public')));
 
   app.get('/', (req, res) => {
     res.status(200).send(`Kasir App API`);
