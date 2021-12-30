@@ -1,13 +1,8 @@
 import { Sequelize, DataTypes, Model, ModelCtor } from 'sequelize';
-interface AuthParams {
-  username: string;
-  name: string;
-  email: string;
-  password: string;
-  flagRoles: number;
-}
+import * as Interface from '@interfaces/index';
 
-const UsersModel = (sequelize: Sequelize) : ModelCtor<Model<AuthParams>> => {
+
+const UsersModel = (sequelize: Sequelize) : ModelCtor<Model<Interface.Users>> => {
   return sequelize.define(
     'users',
     {
@@ -25,6 +20,9 @@ const UsersModel = (sequelize: Sequelize) : ModelCtor<Model<AuthParams>> => {
       },
       flagRoles: {
         type: DataTypes.INTEGER,
+      },
+      image: {
+        type: DataTypes.STRING,
       },
     },
     {
