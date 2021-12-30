@@ -1,7 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
-import * as Auth from '../../services/auth.service';
-import ROLES from '../../configs/flagRole.config';
-import logger from '../../loaders/logger';
+import * as Auth from '@services/auth.service';
+import ROLES from '@configs/flagRole.config';
+
+
 export const SignUp = async (
   req: Request,
   res: Response,
