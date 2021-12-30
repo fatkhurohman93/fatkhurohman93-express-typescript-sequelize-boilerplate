@@ -24,7 +24,20 @@
     "jsx": "preserve",
     "lib":["esnext"],
     "types": ["node"],
-    "typeRoots": ["src/types/custom.d.ts" ],
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@utils/*": ["utils/*"],
+      "@services/*": ["services/*"],
+      "@loaders/*": ["loaders/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@configs/*":["configs/*"],
+      "@models/*":["models/*"],
+      "@api/*": ["api/*"],
+      "@controllers/*": ["api/controllers/*"],
+      "@middlewares/*": ["api/middlewares/*"],
+      "@routers/*": ["api/routers/*"]
+    }
   },
   "include": [
     "src/**/*"
@@ -32,6 +45,7 @@
   "exclude": [
     "node_modules",
     "dist",
-    "**/*.spec.ts",
+    "public",
+    "**/*.spec.ts"
   ]
 }
