@@ -1,15 +1,17 @@
 import express from 'express';
-import logger from './loaders/logger';
-import loaders from './loaders';
+import logger from '@loaders/logger';
+import loaders from '@loaders/index';
+import localIP from '@utils/getLocalIP';
 
 const startServer = async () => {
   const app = express();
-  const port = 4000;
-
+  const port = process.env.PORT || 8080;
   await loaders(app);
 
-  app.listen({ port: 4000 }, () =>
-    logger.info(`🚀 Server listening at http://localhost:${port}`)
+  app.listen({ port }, () =>
+    logger.info(
+      `🚀 Server listening at http://${localIP() || 'localhost'}:${port}`
+    )
   );
 };
 
