@@ -1,12 +1,17 @@
 import express, { Request, Response, NextFunction, Application } from 'express';
 import cors from 'cors';
-import { AppError, BadRequest, HTTPNotFound } from '../utils/appError';
-import database from './database';
-import router from '../api';
+import { AppError, BadRequest, HTTPNotFound } from '@utils/appError';
+import database from '@loaders/database';
+import router from '@api/index';
 import dotenv from 'dotenv';
+import path from 'path';
+
 dotenv.config();
 
+
 export default ({ app }: { app: Application }) => {
+    app.use('/', express.static(path.join(__dirname, '../../public')));
+
   app.get('/', (req, res) => {
     res.status(200).send(`Kasir App API`);
   });
