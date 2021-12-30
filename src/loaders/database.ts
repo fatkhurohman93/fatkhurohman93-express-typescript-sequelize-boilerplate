@@ -1,5 +1,5 @@
-import logger from './logger';
-import { sequelize as db, models } from '../models/index';
+import logger from '@loaders/logger';
+import { sequelize as db } from '@models/index';
 
 const getConnection = async () => {
   try {
