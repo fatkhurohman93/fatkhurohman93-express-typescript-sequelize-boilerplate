@@ -1,18 +1,20 @@
 import { models } from '@models/index';
 import logger from '@loaders/logger';
-import { BadRequest, ServerError } from '@utils/appError';
-import base64ToImage from '@utils/base64ToImage';
+import { BadRequest } from '@utils/appError';
+import { base64ToImage, catchError } from '@utils/index';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import secret from '../configs/secret.config';
-import * as Interface from '@interfaces/index';
+import { Users } from '@interfaces/index';
+import { checkPassword } from './user.service';
+import { LANG } from '@utils/index';
 
 const { users } = models;
 
-const signUp = async (params: Interface.Users) => {
+export const signUp = async (params: Users) => {
   try {
-    if (!params.username || !params.password || !params.email) {
-      throw new BadRequest(`Wrong parameter.`);
+    if (!params.userName || !params.password || !params.email) {
+      throw new BadRequest(LANG.error.wrong_parameter);
     }
 
     const image = params.image
@@ -21,42 +23,32 @@ const signUp = async (params: Interface.Users) => {
 
     params.password = bcrypt.hashSync(params.password, 8);
 
-    logger.info(`Creating user...`);
+    logger.info(LANG.logger.creating_user);
 
     const result = await users.create({ ...params, image });
 
-    logger.info(`Username: ${params.username} created successfully`);
+    logger.info(LANG.logger.success_creating_user(params.userName));
 
     return result;
   } catch (err) {
-    logger.error(`${err.name}: ${err.message}`);
-    throw new ServerError(`${err.name}: ${err.message}`);
+    return catchError(err.name as string, err.message as string);
   }
 };
 
-const signIn = async (params: Interface.Users) => {
+export const signIn = async (params: Users) => {
   try {
-    if (!params.username || !params.password) {
-      throw new BadRequest(`Please insert username or password.`);
+    if (!params.userName || !params.password) {
+      throw new BadRequest(LANG.error.no_username_password);
     }
 
-    logger.info(`Login username: ${params.username}..`);
+    logger.info(LANG.logger.login(params.userName));
 
-    const findUserResult = await users.findOne({
-      where: { username: params.username },
-    });
-    if (!findUserResult) {
-      throw new BadRequest(`Username not found.`);
-    }
-
-    const { username, email, name, password, flagRoles } =
-      findUserResult.toJSON();
-
-    const passwordIsValid = bcrypt.compareSync(params.password, password);
+    const { userName, email, name, flagRoles, passwordIsValid } =
+      await checkPassword(params.password, params.userName);
 
     var token = jwt.sign(
       {
-        username,
+        userName,
         email,
         name,
       },
@@ -67,10 +59,10 @@ const signIn = async (params: Interface.Users) => {
     );
 
     if (!passwordIsValid) {
-      throw new BadRequest(`Wrong password.`);
+      throw new BadRequest(LANG.error.wrong_password);
     }
 
-    logger.info(`Username: ${params.username} login successfully`);
+    logger.info(LANG.logger.success_login(userName));
 
     return {
       flagRoles,
@@ -78,9 +70,6 @@ const signIn = async (params: Interface.Users) => {
       token,
     };
   } catch (err) {
-    logger.error(`${err.name}: ${err.message}`);
-    throw new ServerError(`${err.name}: ${err.message}`);
+    return catchError(err.name as string, err.message as string);
   }
 };
-
-export { signUp, signIn };

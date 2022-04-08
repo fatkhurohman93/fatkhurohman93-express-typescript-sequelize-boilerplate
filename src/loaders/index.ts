@@ -1,7 +1,7 @@
 import express from 'express';
 import expressLoader from './express';
 import database from './database';
-
+import { LANG } from '@utils/index';
 import logger from './logger';
 
 export default async (app: express.Application) => {
@@ -9,5 +9,5 @@ export default async (app: express.Application) => {
   await database.getConnection();
 
   expressLoader({ app });
-  logger.info('Welcome to The Application');
+  logger.info(LANG.welcome);
 };

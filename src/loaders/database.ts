@@ -1,25 +1,24 @@
 import logger from '@loaders/logger';
 import { sequelize as db } from '@models/index';
+import { LANG } from '@utils/index';
 
 const getConnection = async () => {
   try {
-    logger.info('Begin Database Connection');
+    logger.info(LANG.setup.connect_to_db);
     await db.sync();
     await db.authenticate();
-    logger.info('Connect To Database Sucessfully');
+    logger.info(LANG.setup.success_connect_to_db);
   } catch (error) {
-    console.log(error);
-    logger.error(`🔥 Cannot connect to Database message: ${error.message} 🔥`);
+    logger.error(LANG.setup.failed_connect_to_db(error.message));
   }
 };
 
 const clearDatabase = async () => {
   try {
     await db.sync({ force: true });
-    logger.info('Database reseted.');
+    logger.info(LANG.setup.db_reset);
   } catch (error) {
-    console.log(error);
-    logger.error('Unable to clear the database');
+    logger.error(LANG.setup.db_reset_failed);
   }
 };
 

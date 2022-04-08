@@ -2,7 +2,7 @@ import fs from 'fs';
 import logger from '@loaders/logger';
 import { ServerError } from '@utils//appError';
 
-export default (data: string, name: string) => {
+export const base64ToImage = (data: string, name: string) => {
   try {
     logger.info('Saving image...');
     const time = new Date().getTime();

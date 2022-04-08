@@ -5,29 +5,29 @@ import database from '@loaders/database';
 import router from '@api/index';
 import dotenv from 'dotenv';
 import path from 'path';
-
+import { LANG } from '@utils/index';
+import { whiteList } from '@configs/whitelist.config';
+import { ENVIRONMENT, ROUTES } from '@interfaces/index';
 dotenv.config();
 
-
 export default ({ app }: { app: Application }) => {
-  app.use('/', express.static(path.join(__dirname, '../../public')));
+  app.use(ROUTES.rootPath, express.static(path.join(__dirname, ROUTES.public)));
 
-  app.get('/', (req, res) => {
-    res.status(200).send(`Kasir App API`);
+  app.get(ROUTES.rootPath, (req, res) => {
+    res.status(200).send(LANG.appName);
   });
   app.enable('trust proxy');
   /**
    * Cors
    */
-  const whitelist = ['http://localhost:3000'];
   app.use(
     cors({
       origin: function (origin, callback) {
         if (!origin) {
           return callback(null, true);
         }
-        if (whitelist.indexOf(origin) === -1 && whitelist.indexOf('*') === -1) {
-          const msg = `The CORS policy for this site does not allow access from this ${origin} specified origin`;
+        if (whiteList.indexOf(origin) === -1 && whiteList.indexOf('*') === -1) {
+          const msg = LANG.setup.cors_message(origin);
           return callback(new BadRequest(msg), false);
         }
         return callback(null, true);
@@ -44,29 +44,29 @@ export default ({ app }: { app: Application }) => {
   /**
    * Check Status
    */
-  app.get('/status', (req, res) => {
-    res.status(200).send({ message: 'OK' });
+  app.get(ROUTES.status, (req, res) => {
+    res.status(200).send({ message: LANG.ok });
   });
   /**
    * Reset Database
    */
 
-  if (process.env.ENVIRONMENT === 'DEV')
-    app.get('/clear-db', async (req, res) => {
+  if (process.env.ENVIRONMENT === ENVIRONMENT.development)
+    app.get(ROUTES.clearDB, async (req, res) => {
       await database.clearDatabase();
-      res.status(200).send('Database reseted.');
+      res.status(200).send(LANG.setup.db_reset);
     });
 
   /**
    * Load Route
    */
-  app.use('/api', router());
+  app.use(ROUTES.apiPrefix, router());
 
   /**
    * HTTP NOT Found Handler
    */
   app.use((req: Request, res: Response, next: NextFunction) => {
-    throw new HTTPNotFound(`Page you are looking ${req.originalUrl} not found`);
+    throw new HTTPNotFound(LANG.error.http_not_found(req.originalUrl));
   });
 
   /**
@@ -75,7 +75,7 @@ export default ({ app }: { app: Application }) => {
   app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof AppError) {
       return res.status(err.statusCode).json({
-        status: 'error',
+        status: LANG.err,
         statusCode: err.statusCode,
         message: err.message,
         errors: err.error,
@@ -84,12 +84,12 @@ export default ({ app }: { app: Application }) => {
 
     let statusCode: number | undefined = undefined;
 
-    if (err.message === 'jwt expired') {
+    if (err.message === LANG.error.jwt_expired) {
       statusCode = 401;
     }
 
     return res.status(statusCode || 500).json({
-      status: 'error',
+      status: LANG.err,
       statusCode: statusCode,
       message: err.message,
       errors: err,

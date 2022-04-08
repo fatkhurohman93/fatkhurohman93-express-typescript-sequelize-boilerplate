@@ -1,7 +1,8 @@
 import express from 'express';
 import logger from '@loaders/logger';
 import loaders from '@loaders/index';
-import localIP from '@utils/getLocalIP';
+import { getLocalIP as localIP } from '@utils/index';
+import { LANG } from '@utils/index';
 
 const startServer = async () => {
   const app = express();
@@ -9,9 +10,7 @@ const startServer = async () => {
   await loaders(app);
 
   app.listen({ port }, () =>
-    logger.info(
-      `🚀 Server listening at http://${localIP() || 'localhost'}:${port}`
-    )
+    logger.info(LANG.setup.server_listen(localIP(), port))
   );
 };
 

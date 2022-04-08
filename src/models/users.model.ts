@@ -6,7 +6,7 @@ const UsersModel = (sequelize: Sequelize) : ModelCtor<Model<Interface.Users>> =>
   return sequelize.define(
     'users',
     {
-      username: {
+      userName: {
         type: DataTypes.STRING('16'),
       },
       name: {
