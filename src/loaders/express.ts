@@ -22,7 +22,7 @@ export default ({ app }: { app: Application }) => {
    */
   app.use(
     cors({
-      origin: function (origin, callback) {
+      origin (origin, callback) {
         if (!origin) {
           return callback(null, true);
         }
@@ -82,7 +82,7 @@ export default ({ app }: { app: Application }) => {
       });
     }
 
-    let statusCode: number | undefined = undefined;
+    let statusCode: number | undefined;
 
     if (err.message === LANG.error.jwt_expired) {
       statusCode = 401;
@@ -90,7 +90,7 @@ export default ({ app }: { app: Application }) => {
 
     return res.status(statusCode || 500).json({
       status: LANG.err,
-      statusCode: statusCode,
+      statusCode,
       message: err.message,
       errors: err,
     });

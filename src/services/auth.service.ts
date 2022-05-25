@@ -5,33 +5,44 @@ import { base64ToImage, catchError } from '@utils/index';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import secret from '../configs/secret.config';
-import { Users } from '@interfaces/index';
+import { Users, USERNAME, USER_ATTRIBUTES } from '@interfaces/index';
 import { checkPassword } from './user.service';
-import { LANG } from '@utils/index';
+import { LANG, dateLocal } from '@utils/index';
 
 const { users } = models;
 
-export const signUp = async (params: Users) => {
+export const signUp = async (params: Users, userName?: USERNAME) => {
   try {
     if (!params.userName || !params.password || !params.email) {
       throw new BadRequest(LANG.error.wrong_parameter);
     }
+    const dateParameter = dateLocal();
+    const createdBy = userName || USER_ATTRIBUTES.anonymous;
 
     const image = params.image
-      ? base64ToImage(params.image, params.imageName || 'no-name')
-      : '';
+      ? base64ToImage(
+          params.image,
+          params.imageName || LANG.no_name,
+          LANG.folderName.user
+        )
+      : LANG.empty;
 
     params.password = bcrypt.hashSync(params.password, 8);
 
     logger.info(LANG.logger.creating_user);
 
-    const result = await users.create({ ...params, image });
+    const result = await users.create({
+      ...params,
+      image,
+      createdBy,
+      ...dateParameter,
+    });
 
     logger.info(LANG.logger.success_creating_user(params.userName));
 
     return result;
   } catch (err) {
-    return catchError(err.name as string, err.message as string);
+    return catchError(err.name, err.message);
   }
 };
 
@@ -46,7 +57,7 @@ export const signIn = async (params: Users) => {
     const { userName, email, name, flagRoles, passwordIsValid } =
       await checkPassword(params.password, params.userName);
 
-    var token = jwt.sign(
+    const token = jwt.sign(
       {
         userName,
         email,
@@ -70,6 +81,6 @@ export const signIn = async (params: Users) => {
       token,
     };
   } catch (err) {
-    return catchError(err.name as string, err.message as string);
+    return catchError(err.name, err.message);
   }
 };

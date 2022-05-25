@@ -6,4 +6,6 @@ export * from './filterByName';
 export * from './getLocalIP';
 export * from './getPagination';
 export * from './getPagingData';
-export * from './lang'
+export * from './lang';
+export * from './authorities';
+export * from './dateLocal';

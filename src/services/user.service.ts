@@ -8,71 +8,106 @@ import {
   base64ToImage,
   catchError,
 } from '@utils/index';
-import { Users, USERNAME, PASSWORD, USER_ATTRIBUTES } from '@interfaces/index';
+import {
+  Users,
+  FindAllParams,
+  USERNAME,
+  PASSWORD,
+  USER_ATTRIBUTES,
+} from '@interfaces/index';
 import bcrypt from 'bcrypt';
-import { LANG } from '@utils/index';
+import { LANG, dateLocal } from '@utils/index';
 
 const { users } = models;
 
-export const findAll = async (params: Users) => {
+export const findAll = async (params: FindAllParams) => {
   try {
     const { page, size, name } = params;
     const { limit, offset } = getPagination(page, size);
 
-    logger.info(LANG.logger.getting_users);
+    logger.info(LANG.logger.fetching_users);
 
-    const findAllUserResult = await users.findAndCountAll({
+    const result = await users.findAndCountAll({
       where: filterByName(name),
-      attributes: [
-        USER_ATTRIBUTES.userName,
-        USER_ATTRIBUTES.email,
-        USER_ATTRIBUTES.name,
-      ],
+      attributes: { exclude: [USER_ATTRIBUTES.password] },
       limit,
       offset,
     });
 
-    const finalResult = getPagingData(findAllUserResult, limit, page);
-    
+    const finalResult = getPagingData(result, limit, page);
+
     logger.info(LANG.logger.result_get_users(finalResult.totalItems));
 
     return finalResult;
   } catch (err) {
-    return catchError(err.name as string, err.message as string);
+    return catchError(err.name, err.message);
   }
 };
 
-export const update = async ({
-  userName,
-  data,
-}: {
-  userName?: USERNAME;
-  data: Users;
-}) => {
+export const findOne = async (userName: USERNAME) => {
   try {
     if (!userName) {
       throw new BadRequest(LANG.error.wrong_username);
     }
 
-    logger.info(LANG.logger.update_user(userName));
+    logger.info(LANG.logger.fetching_user(userName));
+
+    const result = await users.findOne({
+      where: { userName },
+      attributes: { exclude: [USER_ATTRIBUTES.password] },
+    });
+
+    if (!result) {
+      throw new BadRequest(LANG.error.username_not_found);
+    }
+
+    logger.info(LANG.logger.fetch_user_success(userName));
+
+    return result;
+  } catch (err) {
+    return catchError(err.name, err.message);
+  }
+};
+
+export const update = async (
+  data: Users,
+  whoIsAccess: USERNAME,
+  userName: USERNAME
+) => {
+  try {
+    if (!userName) {
+      throw new BadRequest(LANG.error.wrong_username);
+    }
+
+    const { lastUpdatedTime } = dateLocal();
+    const lastUpdatedBy = whoIsAccess || USER_ATTRIBUTES.anonymous;
+
+    logger.info(LANG.logger.updating_user(userName));
 
     const { name, email, flagRoles } = data;
 
     const image = data.image
-      ? base64ToImage(data.image, data.imageName || LANG.no_name)
+      ? base64ToImage(
+          data.image,
+          data.imageName || LANG.no_name,
+          LANG.folderName.user
+        )
       : LANG.empty;
 
-    const updateUserResult = await users.update(
-      { name, email, image, flagRoles },
+    const result = await users.update(
+      { name, email, image, flagRoles, lastUpdatedBy, lastUpdatedTime },
       { where: { userName } }
     );
 
-    if (!updateUserResult[0]) {
+    if (!result[0]) {
       throw new BadRequest(LANG.error.no_data_updated);
     }
-    return LANG.updated(updateUserResult[0]);
+
+    logger.info(LANG.updated(result[0]));
+
+    return LANG.updated(result[0]);
   } catch (err) {
-    return catchError(err.name as string, err.message as string);
+    return catchError(err.name, err.message);
   }
 };
 
@@ -139,6 +174,28 @@ export const updatePassword = async (
 
     return LANG.password_updated;
   } catch (err) {
-    return catchError(err.name as string, err.message as string);
+    return catchError(err.name, err.message);
+  }
+};
+
+export const destroy = async (userName: string) => {
+  try {
+    if (!userName) {
+      throw new BadRequest(LANG.error.wrong_username);
+    }
+
+    logger.info(LANG.logger.deleting_user(userName));
+
+    const result = await users.destroy({ where: { userName } });
+
+    if (!result) {
+      throw new BadRequest(LANG.error.no_data_updated);
+    }
+
+    logger.info(LANG.deleted(result));
+
+    return result;
+  } catch (err) {
+    return catchError(err.name, err.message);
   }
 };

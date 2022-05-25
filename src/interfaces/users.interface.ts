@@ -1,4 +1,6 @@
-export interface Users {
+import { Common } from './common.interface';
+
+export interface Users extends Common {
   id?: number | string;
   userName: string;
   name: string;
@@ -7,8 +9,6 @@ export interface Users {
   email: string;
   password: string;
   flagRoles: number;
-  page?: number;
-  size?: number;
   oldPassword?: string;
   newPassword?: string;
 }
@@ -21,6 +21,14 @@ export enum USER_ATTRIBUTES {
   email = 'email',
   password = 'password',
   flagRoles = 'flagRoles',
+  createdTime = 'createdTime',
+  createdDate = 'createdDate',
+  year = 'year',
+  month = 'month',
+  lastUpdatedTime = 'lastUpdatedTime',
+  createdBy = 'createdBy',
+  lastUpdatedBy = 'lastUpdatedBy',
+  anonymous = 'anonymous',
 }
 
 export enum USER_ROLES {

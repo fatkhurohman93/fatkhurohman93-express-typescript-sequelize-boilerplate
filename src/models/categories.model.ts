@@ -1,31 +1,31 @@
 import { Sequelize, DataTypes, Model, ModelCtor } from 'sequelize';
 import * as Interface from '@interfaces/index';
 import { commonColumn } from './commonColumn';
-const UsersModel = (
+
+const CategoriesModel = (
   sequelize: Sequelize
-): ModelCtor<Model<Interface.Users>> => {
+): ModelCtor<Model<Interface.Categories>> => {
   return sequelize.define(
-    'users',
+    'categories',
     {
-      userName: {
-        type: DataTypes.STRING('16'),
-        allowNull: false,
-        unique: true,
-      },
       name: {
         type: DataTypes.STRING('30'),
+        allowNull: false,
       },
-      email: {
-        type: DataTypes.STRING('30'),
-      },
-      password: {
+      description: {
         type: DataTypes.STRING,
       },
-      flagRoles: {
-        type: DataTypes.INTEGER,
+      code: {
+        type: DataTypes.STRING('10'),
       },
       image: {
         type: DataTypes.STRING,
+      },
+      productCategoryDiscount: {
+        type: DataTypes.FLOAT,
+      },
+      productCategoryTax: {
+        type: DataTypes.FLOAT,
       },
       ...commonColumn,
     },
@@ -36,4 +36,4 @@ const UsersModel = (
   );
 };
 
-export default UsersModel;
+export default CategoriesModel;

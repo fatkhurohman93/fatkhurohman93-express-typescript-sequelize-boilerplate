@@ -9,7 +9,7 @@ const colorsLogger = {
 
 winston.addColors(colorsLogger);
 
-let alignColorsAndTime = winston.format.combine(
+const alignColorsAndTime = winston.format.combine(
   winston.format.colorize({
     level: true,
   }),

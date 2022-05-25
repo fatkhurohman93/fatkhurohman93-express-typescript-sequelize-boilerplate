@@ -7,6 +7,7 @@
   },
   "rules": {
     "ordered-imports":false,
+    "curly": [false, "ignore-same-line"],
     "interface-name": false,
     "no-empty-interface":false,
     "object-literal-sort-keys": false,
@@ -14,6 +15,8 @@
     "no-console": false,
     "no-var-requires":false,
     "max-classes-per-file":false,
-    "variable-name":false
+    "variable-name":false,
+    "ban-types": false
+
   }
 }
